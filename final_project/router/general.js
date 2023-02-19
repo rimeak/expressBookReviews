@@ -82,18 +82,21 @@ public_users.get('/review/:isbn',function (req, res) {
 });
 
 // Task 10
-function getBookList(){
-  return new Promise((resolve,reject)=>{
-    resolve(books);
-  })
-}
-public_users.get('/',function (req, res) {
-  getBookList().then(
-    (bk)=>res.send(JSON.stringify(bk, null, 4)),
-    (error) => res.send("denied")
-  );  
-});
-
+function getBookList() {
+    return new Promise((resolve, reject) => {
+      resolve(books);
+    });
+  }
+  async function handleGetRequest(req, res) {
+    try {
+      const bookList = await getBookList();
+      res.send(JSON.stringify(bookList, null, 4));
+    } catch (error) {
+      res.send("denied");
+    }
+  }
+  public_users.get('/', handleGetRequest);
+  
 // Task 11
 function getFromISBN(isbn){
   let book_ = books[isbn];  
